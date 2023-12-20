@@ -20,7 +20,7 @@ docker-compose up --build
 ### Trouble shoot
 The following challenges did show up during the build and have been solved in the following way:
 -> Laravel sail did not build and raised an error
-- Add the following entries to the .env file, see here[https://stackoverflow.com/questions/67224488/laravel-sail-wont-build-on-ubuntu-20-04-groupadd-invalid-group-id-sail]
+- Add the following entries to the .env file, see [here](https://stackoverflow.com/questions/67224488/laravel-sail-wont-build-on-ubuntu-20-04-groupadd-invalid-group-id-sail)
 ````
 WWWGROUP=1000
 WWWUSER=1000
