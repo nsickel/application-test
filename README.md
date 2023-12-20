@@ -1,3 +1,38 @@
+## Requirements
+The code challenge was build with build system Ubuntu 22.04.3 LTS
+Requirements and packages may differ for other systems
+
+Following packages where used:
+- php cli, version PHP 8.1.2-1ubuntu2.14 (cli)
+  - php-xml
+  - php-curl
+- Composer 2.2.6
+
+## Build & run the application
+To build and test the application the following steps have been executed. 
+````
+composer install
+cp .env.example .env
+docker-compose up --build
+./vendor/bin/sail artisan migrate
+./vendor/bin/sail artisan test
+````
+### Trouble shoot
+The following challenges did show up during the build and have been solved in the following way:
+-> Laravel sail did not build and raised an error
+- Add the following entries to the .env file, see here[https://stackoverflow.com/questions/67224488/laravel-sail-wont-build-on-ubuntu-20-04-groupadd-invalid-group-id-sail]
+````
+WWWGROUP=1000
+WWWUSER=1000
+````
+-> laravel container failing to connect to database
+Caused by: docker network challenge with environment parameters
+- set 127.0.0.1 as default value in docker-compose for mysql db host
+- set env-variable in env-file DB_HOST to 'mysql' (alias of mysql) for laravel test
+- DB_HOST should now be equal to service name of mysql container on docker-compose.yml
+
+
+
 # WELCOME TO THE CPI APPLICATION TEST
 
 We are glad that you are interested in working with us. To get to know you better, we would like to give you a small
