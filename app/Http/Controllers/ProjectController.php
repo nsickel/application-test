@@ -19,4 +19,27 @@ class ProjectController extends Controller
         // Return the created project
         return new ProjectResource($project);
     }
+
+    public function read($id){
+        $project = Projects::find($id);
+        return new ProjectResource($project);
+    }
+
+
+    public function update(Request $request, $id) {
+        $request->validate([
+          'title' => 'required|max:255',
+          'body' => 'required',
+        ]);
+        $project = Projects::find($id);
+        $project->update($request->all());
+        return new ProjectResource($project);
+    }
+
+    public function destroy($id){
+
+        $post = Projects::find($id);
+        $post->delete();
+    }
+
 }

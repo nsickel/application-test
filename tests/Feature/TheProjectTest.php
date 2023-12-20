@@ -11,7 +11,7 @@ class TheProjectTest extends TestCase
     protected $password = 'password';
     protected $authCode;
 
-    // Before each test, create a user account
+    // Before each Featuretest, create a user account
     protected function setUp(): void {
         parent::setUp();
         $this->create_user_account();
@@ -51,4 +51,14 @@ class TheProjectTest extends TestCase
         ]);
         $response->assertStatus(201);
     }
+
+    public function test_get_project(): void
+    {
+        $response = $this->withHeaders([
+                'Authorization' => 'Bearer ' . $this->authCode,
+            ])->get('/projects/1');
+            $response->assertStatus(200);
+    }
+
+    
 }
