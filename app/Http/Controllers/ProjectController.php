@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 class ProjectController extends Controller
 {
     public function create() {
-        // Create a new project
+
         $project = Projects::create([
             'name' => request()->name,
             'description' => request()->description,
@@ -21,25 +21,44 @@ class ProjectController extends Controller
     }
 
     public function read($id){
-        $project = Projects::find($id);
-        return new ProjectResource($project);
+       $project = Projects::find($id);
+       if (!$project) {
+            return $this->return_404();
+       }
+       return new ProjectResource($project);
     }
 
 
     public function update(Request $request, $id) {
-        $request->validate([
-          'title' => 'required|max:255',
-          'body' => 'required',
-        ]);
+        /**$request->validate([
+          'name' => 'required|string|max:255',
+          'description' => 'required|string|max:255',
+          'user_id' => auth()->user()->id
+        ]);*/
         $project = Projects::find($id);
-        $project->update($request->all());
-        return new ProjectResource($project);
+        if (!$project) {
+            return $this->return_404();
+        }
+        $project = $project->update($request->all());
+         return new ProjectResource($project);
     }
 
     public function destroy($id){
+        $project = Projects::find($id);
+        if (!$project) {
+            return $this->return_404();
+        }
+        $project->delete();
+        return response()->json([
+            'message' => 'project deleted'
+        ], 200);
+    }
 
-        $post = Projects::find($id);
-        $post->delete();
+    private function return_404() {
+        return response()->json(
+            ['message' => 'project not found'],
+            404
+        );
     }
 
 }

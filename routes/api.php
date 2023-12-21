@@ -29,7 +29,7 @@ Route::middleware('auth:sanctum')->group(function() {
     Route::post('/logout', [App\Http\Controllers\AuthController::class, 'logout']);
     Route::post('/projects', [App\Http\Controllers\ProjectController::class, 'create']);
     Route::get('/projects/{project}', [App\Http\Controllers\ProjectController::class, 'read']);
-    Route::put('/projects/{project}/', [App\Http\Controllers\ProjectController::class, 'update']);
-    Route::delete('/projects/{project}/', [App\Http\Controllers\ProjectController::class, 'delete']);
-
+    Route::put('/projects/{project}', [App\Http\Controllers\ProjectController::class, 'update']);
+    Route::delete('/projects/{project}', [App\Http\Controllers\ProjectController::class, 'destroy']);
+    Route::post('/time-tracks/', [App\Http\Controllers\TimeTrackController::class, 'create']);
 });

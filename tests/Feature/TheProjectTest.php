@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-// use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class TheProjectTest extends TestCase
@@ -37,28 +37,69 @@ class TheProjectTest extends TestCase
         $this->authCode = $response->json()['token'];
     }
 
-    /**
-     * Perform a login test.
-     */
-    public function test_update_project(): void
+    private function create_project()
     {
-        // Create project + append auth code for login
-        $response = $this->withHeaders([
+        return $this->withHeaders([
             'Authorization' => 'Bearer ' . $this->authCode,
         ])->post('/projects', [
             'name' => 'test',
-            'description' => 'test',
+            'description' => 'test'
         ]);
+    }
+
+    private function get_new_project_response_data()
+    {
+        $response = $this->create_project();
+        return json_decode($response->getContent());
+    }
+
+
+    public function test_create_project(): void
+    {
+        // Create project + append auth code for login
+        $response = $this->create_project();
         $response->assertStatus(201);
     }
 
-    public function test_get_project(): void
+
+    public function test_read_project(): void
     {
+        $content = $this->get_new_project_response_data();
         $response = $this->withHeaders([
                 'Authorization' => 'Bearer ' . $this->authCode,
-            ])->get('/projects/1');
+            ])->get('/projects/' . (string) $content->data->id);
             $response->assertStatus(200);
     }
 
-    
+    public function test_404_no_project_found():void
+    {
+         $random_number = rand(99999, 1000000);
+         $response = $this->withHeaders([
+                'Authorization' => 'Bearer ' . $this->authCode,
+            ])->get('/projects/' . (string) $random_number);
+         $response->assertStatus(404);
+    }
+
+    /**
+    public function test_update_project(): void
+    {
+        $content = $this->get_new_project_response_data();
+        $response = $this->withHeaders([
+                'Authorization' => 'Bearer ' . $this->authCode,
+            ])->put('/projects/' . (string) $content->data->id, [
+                'name' => 'test test',
+                'description' => 'test test'
+            ]);
+        $updated_content = json_decode($response->getContent());
+        print_r($updated_content);
+    }*/
+
+    public function test_destroy(): void
+    {
+        $content = $this->get_new_project_response_data();
+        $response = $this->withHeaders([
+            'Authorization' => 'Bearer ' . $this->authCode,
+        ])->delete('/projects/'. (string) $content->data->id);
+        $response->assertStatus(200);
+    }
 }
